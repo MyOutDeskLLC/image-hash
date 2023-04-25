@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/danm/image-hash#readme",
   "dependencies": {
-    "@cwasm/webp": "^0.1.5",
     "file-type": "^16.5.3",
     "jpeg-js": "^0.4.0",
     "pngjs": "^6.0.0",
