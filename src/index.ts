@@ -5,7 +5,6 @@ import jpeg from 'jpeg-js';
 import { PNG } from 'pngjs';
 import request from 'request';
 import { URL } from 'url';
-import webp from '@cwasm/webp';
 import blockhash from './block-hash';
 
 export interface UrlRequestObject {
@@ -32,16 +31,6 @@ const processPNG = (data, bits, method, cb) => {
 const processJPG = (data, bits, method, cb) => {
   try {
     const decoded = jpeg.decode(data);
-    const res = blockhash(decoded, bits, method ? 2 : 1);
-    cb(null, res);
-  } catch (e) {
-    cb(e);
-  }
-};
-
-const processWebp = (data, bits, method, cb) => {
-  try {
-    const decoded = webp.decode(data);
     const res = blockhash(decoded, bits, method ? 2 : 1);
     cb(null, res);
   } catch (e) {
@@ -95,9 +84,7 @@ export const imageHash = (oldSrc: string | UrlRequestObject | BufferObject, bits
           processPNG(data, bits, method, cb);
         } else if ((ext === 'jpg' || ext === 'jpeg') && type.mime === 'image/jpeg') {
           processJPG(data, bits, method, cb);
-        } else if (ext === 'webp' && type.mime === 'image/webp') {
-          processWebp(data, bits, method, cb);
-        } else {
+        }  else {
           cb(new Error(`Unrecognized file extension, mime type or mismatch, ext: ${ext} / mime: ${type.mime}`));
         }
       } else {
@@ -106,8 +93,6 @@ export const imageHash = (oldSrc: string | UrlRequestObject | BufferObject, bits
           processPNG(data, bits, method, cb);
         } else if (type.mime === 'image/jpeg') {
           processJPG(data, bits, method, cb);
-        } else if (type.mime === 'image/webp') {
-          processWebp(data, bits, method, cb);
         } else {
           cb(new Error(`Unrecognized mime type: ${type.mime}`));
         }
